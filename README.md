@@ -1,9 +1,9 @@
 # Emotive Speech
 
-A ROS package for emotive speech generation based on DAVID: An open-source platform for real-time emotional speech
+A Standard Python Package For Emotive Speech Generation Based on DAVID: An open-source platform for real-time emotional speech
 transformation using pysox
 
-Prerequisites
+Pre-Requisites
 -------------
 ###### pysptk
 > A python wrapper for Speech Signal Processing Toolkit (SPTK)
@@ -20,28 +20,64 @@ Prerequisites
 
 
 
-Build
+Installation and Setup
+-----
+After fulfilling all the requirements,The Python Package of the Emotive_Speech Project can be cloned as:
+```sh
+$ git clone https://github.com/dergkat/emotivespeech/tree/python_package
+```
+Basic Usage
+===========
+An Example of the Package can be seen below:
+Open `EmotiveSpeech.py`, the Caller Function
+
+```python
+
+FILE_NAME_PATH = "/specify/abs/path/for/the/wavefile"
+
+CHUNK_SIZE = 1024
+	  """2048"""
+	  """4096"""
+typeOfEmotion = "happy"
+		""""sad""""
+		""""afraid""""
+		""""happy_tensed""""
+
+def emotive_speech(FILE_NAME_PATH,CHUNK_SIZE,typeOfEmotion):
+	
+	"""
+	emotive_speech(FILE_NAME_PATH,CHUNK_SIZE,typeOfEmotion)
+	A Caller Module
+		Parameter:FILE_NAME_PATH,CHUNK_SIZE,typeOfEmotion
+		Returns: output
+	"""
+	return output
+
+if __name__ == '__main__':	
+	emotive_speech(FILE_NAME_PATH,CHUNK_SIZE,typeOfEmotion)
+```
+OR,
+From the terminal you can use it as:
+
+```sh
+$ cd python_package/src
+$ python -B EmotiveSpeech /abs/path/ int(chunk_size) happy
+```
+
+Example
 -----
 ```sh
-$ mkdir -p catkin_ws/src
-$ cd catkin_ws/src
-$ git clone https://github.com/dergkat/emotivespeech.git
-$ cd ..
-$ catkin_make
+$ cd python_package/src
+$ python -B EmotiveSpeech /home/user/Desktop/TestFolder/Test.wav 1024 sad
 ```
-
-Run
----
+Arguments
+-----
 ```sh
-roslaunch emo_speech emospeech.launch
+$ python -B EmotiveSpeech.py arg1 arg2 arg3
 ```
+arg1: Absolute Path For Wavefile
+arg2: Chunk_Size(256,512,1024,2048,4096...)
+arg3: TypeofEmotion: (happy,sad,afraid,happy_tensed) 
 
-###### rosnode
- * /emotrans
 
-###### rosparam
- * /emotrans/chunk_size value: 1024
- * /emotrans/emotion_intensity: 100
- * /emotrans/file_names value: [ ]
- * /emotrans/sampling_frequency value: 8000
 
