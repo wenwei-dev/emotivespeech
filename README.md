@@ -60,7 +60,7 @@ Example
 $ cd python_package/src
 $ python -B EmotiveSpeech /home/user/Desktop/TestFolder/Test.wav 1024 sad
 ```
-###Arguments
+### Arguments
 ```sh
 $ python -B EmotiveSpeech.py arg1 arg2 arg3
 ```
