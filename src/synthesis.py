@@ -4,9 +4,12 @@ from sox.transform import Transformer
 import os
 from os.path import basename
 from os.path import splitext
+import EmotiveSpeech as es
 
-FILE_NAME_PATH = "/home/dereje/Desktop/TestFolder/Test.wav"
-OD = os.path.dirname(FILE_NAME_PATH)
+
+FILE_NAME_PATH = es.FILE_NAME_PATH
+CD = os.path.dirname(FILE_NAME_PATH)
+#CD-Current-Directory
 CUTFREQ = 4000
 QFACTOR = 1
 PARAMETER_CONTROL = 1
@@ -193,7 +196,7 @@ def happy_patch(sampleFrequency,utterance_begin):
 	"""
 	
 	
-	filenameout = OD + '/' + splitext(basename(FILE_NAME_PATH))[0] + "Happy.wav"
+	filenameout = CD + '/' + splitext(basename(FILE_NAME_PATH))[0] + "Happy.wav"
 	gain = 3.0
 	semitones = 1.5 * PARAMETER_CONTROL
 	start_time_now,end_time_now=start_end_times(utterance_begin)
@@ -217,7 +220,7 @@ def happy_tensed_patch(sampleFrequency,utterance_begin):
 	See: appended_utterance_time_stamps(CONSECUTIVE_BLOCKS,TIME_STAMPS,selected_inflect_block)
 	
 	"""
-	filenameout = OD + '/' + splitext(basename(FILE_NAME_PATH))[0] + "Happy_Tensed.wav"
+	filenameout = CD + '/' + splitext(basename(FILE_NAME_PATH))[0] + "Happy_Tensed.wav"
 	gain = 3.0
 	semitones = 2.0 * PARAMETER_CONTROL
 	start_time_now,end_time_now=start_end_times(utterance_begin)
@@ -237,7 +240,7 @@ def sad_patch(sampleFrequency):
 		
 		Return:	   sad_patch	
 	"""
-	filenameout = OD + '/' + splitext(basename(FILE_NAME_PATH))[0] + "Sad.wav"
+	filenameout = CD + '/' + splitext(basename(FILE_NAME_PATH))[0] + "Sad.wav"
 	gain = 0.25
 	semitones = -1.5 * PARAMETER_CONTROL
 	sad_patch = sad_sox_init(semitones,gain,CUTFREQ,filenameout)
@@ -257,7 +260,7 @@ def afraid_patch(sampleFrequency,utterance_begin):
 	See: appended_utterance_time_stamps(CONSECUTIVE_BLOCKS,TIME_STAMPS,selected_inflect_block)
 	
 	"""
-	filenameout = OD + '/' + splitext(basename(FILE_NAME_PATH))[0] + "Afraid.wav"
+	filenameout = CD + '/' + splitext(basename(FILE_NAME_PATH))[0] + "Afraid.wav"
 	speed = 8.5
 	depth = 1 + (60 * PARAMETER_CONTROL)
 	start_time_now,end_time_now=start_end_times(utterance_begin)
