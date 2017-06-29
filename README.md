@@ -40,7 +40,6 @@ typeOfEmotion = "happy"
 def emotive_speech(FILE_NAME_PATH,CHUNK_SIZE,typeOfEmotion):
 	
 	"""
-	emotive_speech(FILE_NAME_PATH,CHUNK_SIZE,typeOfEmotion)
 		# Computation Done Here
 	"""
 	return output
@@ -61,8 +60,7 @@ Example
 $ cd python_package/src
 $ python -B EmotiveSpeech /home/user/Desktop/TestFolder/Test.wav 1024 sad
 ```
-Arguments
------
+###Arguments
 ```sh
 $ python -B EmotiveSpeech.py arg1 arg2 arg3
 ```
