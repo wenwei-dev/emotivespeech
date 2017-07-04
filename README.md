@@ -1,9 +1,9 @@
-# Emotive Speech
+# Emotive Speech Python Package
 
-A ROS package for emotive speech generation based on DAVID: An open-source platform for real-time emotional speech
+## A Standard Python Package For Emotive Speech Generation Based on DAVID: An open-source platform for real-time emotional speech
 transformation using pysox
 
-Prerequisites
+Pre-Requisites
 -------------
 ###### pysptk
 > A python wrapper for Speech Signal Processing Toolkit (SPTK)
@@ -18,30 +18,42 @@ Prerequisites
 > we will be using the Transformers (sox.transform.Transformers) for synthesis.
 > http://pysox.readthedocs.io/en/latest/api.html | sudo apt-get install pysox
 
-
-
-Build
+Installation and Setup
+-----
+##### After fulfilling all the requirements,The Python Package of the Emotive Speech Project can be cloned as:
+```sh
+$ git clone https://github.com/dergkat/emotivespeech.git
+```
+Basic Usage
+===========
+##### An Example of the Package can be seen below:
+##### Open `emotivespeech.py`, the Caller Function
+```python
+FILE_NAME_PATH = "/specify/abs/path/for/the/wavefile"
+CHUNK_SIZE = 1024	  
+typeOfEmotion = "happy"
+def emotive_speech(FILE_NAME_PATH,CHUNK_SIZE,typeOfEmotion):
+	#Computation is done here
+	return output
+if __name__ == '__main__':	
+	emotive_speech(FILE_NAME_PATH,CHUNK_SIZE,typeOfEmotion)
+```
+##### OR:From the terminal you can use it as:
+```sh
+$ cd python_package/src
+$ python -B emotivespeech.py /abs/path/ int(chunk_size) typeofEmotion
+```
+Example
 -----
 ```sh
-$ mkdir -p catkin_ws/src
-$ cd catkin_ws/src
-$ git clone https://github.com/dergkat/emotivespeech.git
-$ cd ..
-$ catkin_make
+$ cd python_package/src
+$ python -B emotivespeech.py /home/user/Desktop/TestFolder/Test.wav 1024 sad
 ```
-
-Run
----
+#### Arguments
 ```sh
-roslaunch emo_speech emospeech.launch
+$ python -B emotivespeech.py arg1 arg2 arg3
 ```
-
-###### rosnode
- * /emotrans
-
-###### rosparam
- * /emotrans/chunk_size value: 1024
- * /emotrans/emotion_intensity: 100
- * /emotrans/file_names value: [ ]
- * /emotrans/sampling_frequency value: 8000
+###### arg1: Absolute Path For Wavefile
+###### arg2: Chunk_Size(256,512,1024,2048,4096...)
+###### arg3: TypeofEmotion: (happy,sad,afraid,happy_tensed) 
 
