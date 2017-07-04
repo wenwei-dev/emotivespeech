@@ -4,9 +4,9 @@ import preprocess as prep
 import synthesis as synth
 
 
-def process_variables(x, fs, CHUNK_SIZE):
+def process_variables(x, fs, chunk_size):
     """
-    process_variables(x,fs,CHUNK_SIZE)
+    process_variables(x,fs,chunk_size)
                     computes basic variables important for the entire process.
             Parameters: x-discrete data from the wavefile
                                     fs-sampling frequency
@@ -16,17 +16,17 @@ def process_variables(x, fs, CHUNK_SIZE):
                                     Consecutive Blocks- This are consecutive blocks that are important
                                     for inflection and/or pitch bending
     """
-    NUM_BLOCKS = int(np.ceil(len(x) / CHUNK_SIZE))
-    SAMPLE_PERIOD = 1 / float(fs) * CHUNK_SIZE
+    num_blocks = int(np.ceil(len(x) / chunk_size))
+    sample_period = 1 / float(fs) * chunk_size
 
-    TIME_STAMPS = (np.arange(0, NUM_BLOCKS - 1) * (CHUNK_SIZE / float(fs)))
-    CONSECUTIVE_BLOCKS = 1 + int(0.5 / SAMPLE_PERIOD)
-    return TIME_STAMPS, CONSECUTIVE_BLOCKS
+    time_stamps = (np.arange(0, num_blocks - 1) * (chunk_size / float(fs)))
+    consecutive_blocks = 1 + int(0.5 / sample_period)
+    return time_stamps, consecutive_blocks
 
 
-def batch_analysis(x, fs, CHUNK_SIZE):
+def batch_analysis(x, fs, chunk_size):
     """
-    batch_analysis(x,fs,CHUNK_SIZE)
+    batch_analysis(x,fs,chunk_size)
 
                     computes the fundamental frequency/pitch of blocks/,voiced_samples and the rms values
                     that are important for analysis and will be used for pre-process
@@ -44,10 +44,10 @@ def batch_analysis(x, fs, CHUNK_SIZE):
                                     categorizing inflecion/pitch bending samples.
     """
 
-    fundamental_frequency_in_blocks = alysis.pitch_detect(x, fs, CHUNK_SIZE)
-    rms = alysis.root_mean_square(x, CHUNK_SIZE, fs)
+    fundamental_frequency_in_blocks = alysis.pitch_detect(x, fs, chunk_size)
+    rms = alysis.root_mean_square(x, chunk_size, fs)
     voiced_unvoiced_starting_info_object = alysis.starting_info(
-        x, fundamental_frequency_in_blocks, fs, CHUNK_SIZE)
+        x, fundamental_frequency_in_blocks, fs, chunk_size)
     voiced_samples = voiced_unvoiced_starting_info_object['VSamp']
     return fundamental_frequency_in_blocks, voiced_samples, rms
 
@@ -78,18 +78,18 @@ def batch_preprocess(fundamental_frequency_in_blocks, voiced_samples, rms):
     return selected_inflect_block
 
 
-def batch_synthesis(fs, CONSECUTIVE_BLOCKS, TIME_STAMPS,
+def batch_synthesis(fs, consecutive_blocks, time_stamps,
                     selected_inflect_block_new, typeOfEmotion):
     """
-    batch_synthesis(fs,CONSECUTIVE_BLOCKS,TIME_STAMPS,selected_inflect_block_new,typeOfEmotion)
+    batch_synthesis(fs,consecutive_blocks,time_stamps,selected_inflect_block_new,typeOfEmotion)
 
                     This is the synthesis stage. This modules gives emotions of
                     "Happy","Happy-Tensed","Sad","Afraid" for the wavefile using
                     the process variables and selected_inflect_blocks
 
             Parameters: fs
-                                    CONSECUTIVE_BLOCKS
-                                    TIME_STAMPS
+                                    consecutive_blocks
+                                    time_stamps
                                     selected_inflect_block_new
                                     typeOfEmotion
             Returns: 	output- Modified/Synthesised wavefile
@@ -98,13 +98,13 @@ def batch_synthesis(fs, CONSECUTIVE_BLOCKS, TIME_STAMPS,
     if typeOfEmotion == "happy":
         selected_inflect_block = selected_inflect_block_new
         utterance_time_stamps = synth.appended_utterance_time_stamps(
-            CONSECUTIVE_BLOCKS, TIME_STAMPS, selected_inflect_block)
+            consecutive_blocks, time_stamps, selected_inflect_block)
         output = synth.happy_patch(fs, utterance_time_stamps)
 
     if typeOfEmotion == "happy_tensed":
         selected_inflect_block = selected_inflect_block_new
         utterance_time_stamps = synth.appended_utterance_time_stamps(
-            CONSECUTIVE_BLOCKS, TIME_STAMPS, selected_inflect_block)
+            consecutive_blocks, time_stamps, selected_inflect_block)
         output = synth.happy_tensed_patch(fs, utterance_time_stamps)
 
     if typeOfEmotion == "sad":
@@ -113,6 +113,6 @@ def batch_synthesis(fs, CONSECUTIVE_BLOCKS, TIME_STAMPS,
     if typeOfEmotion == "afraid":
         selected_inflect_block = selected_inflect_block_new
         utterance_time_stamps = synth.appended_utterance_time_stamps(
-            CONSECUTIVE_BLOCKS, TIME_STAMPS, selected_inflect_block)
+            consecutive_blocks, time_stamps, selected_inflect_block)
         output = synth.afraid_patch(fs, utterance_time_stamps)
     return output

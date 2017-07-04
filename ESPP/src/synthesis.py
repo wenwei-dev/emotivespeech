@@ -4,27 +4,27 @@ from sox.transform import Transformer
 import os
 from os.path import basename
 from os.path import splitext
-import EmotiveSpeech as es
+import emotivespeech as es
 
 
-FILE_NAME_PATH = es.FILE_NAME_PATH
-CD = os.path.dirname(FILE_NAME_PATH)
-# CD-Current-Directory
-CUTFREQ = 4000
-QFACTOR = 1
-PARAMETER_CONTROL = 1
+file_name_path = es.file_name_path
+cd = os.path.dirname(file_name_path)
+# cd-Current-Directory
+cutfreq = 4000
+qfactor = 1
+parameter_control = 1
 
 
 def appended_utterance_time_stamps(
-        CONSECUTIVE_BLOCKS, TIME_STAMPS, selected_inflect_block):
+        consecutive_blocks, time_stamps, selected_inflect_block):
     """
-    appended_utterance_time_stamps(CONSECUTIVE_BLOCKS,TIME_STAMPS,selected_inflect_block)
+    appended_utterance_time_stamps(consecutive_blocks,time_stamps,selected_inflect_block)
                     This is appended time stamps for particular utterances.
                     It is important for the synthesis process. It is time stamps
                     of the utternace region we have got from the selected_infect_block
 
-            Parameter:CONSECUTIVE_BLOCKS
-                              TIME_STAMPS
+            Parameter:consecutive_blocks
+                              time_stamps
                               selected_inflect_block
 
             Returns: utterance_time_stamps
@@ -35,9 +35,9 @@ def appended_utterance_time_stamps(
     utterance_time_stamps = []
     for i in range(len(selected_inflect_block)):
         utterance_time_stamps.append(
-            TIME_STAMPS[
+            time_stamps[
                 selected_inflect_block[i][
-                    :CONSECUTIVE_BLOCKS]])
+                    :consecutive_blocks]])
     utterance_time_stamps = np.asarray(utterance_time_stamps)
     return utterance_time_stamps
 
@@ -113,7 +113,7 @@ def normalize_function(utterance_time_stamps):
 
             Returns: normalized_utterance
 
-    See: appended_utterance_time_stamps(CONSECUTIVE_BLOCKS,TIME_STAMPS,selected_inflect_block)
+    See: appended_utterance_time_stamps(consecutive_blocks,time_stamps,selected_inflect_block)
 
     """
     normal = max(utterance_time_stamps) - min(utterance_time_stamps)
@@ -180,15 +180,15 @@ def concatenate_list(start_time_now, end_time_now):
 
 
 def happy_sox_init(filenameout, semitones, number_of_bends,
-                   start_time_now, end_time_now, cents, CUTFREQ, gain, QFACTOR):
+                   start_time_now, end_time_now, cents, cutfreq, gain, qfactor):
     patch = Transformer()
     patch.pitch(semitones, False)
     patch.tempo(1.1, 's')
     patch.gain(2.0)
     # patch.bend(number_of_bends,start_time_now,end_time_now,cents,50)
-    patch.treble(gain, CUTFREQ, 0.5)
-    patch.equalizer(CUTFREQ, QFACTOR, gain)
-    patch.build(FILE_NAME_PATH, filenameout)
+    patch.treble(gain, cutfreq, 0.5)
+    patch.equalizer(cutfreq, qfactor, gain)
+    patch.build(file_name_path, filenameout)
     return patch
 
 
@@ -199,30 +199,30 @@ def afraid_sox_init(speed, depth, number_of_bends,
     patch.tempo(1.05, 's')
     patch.gain(1.1)
     # patch.bend(number_of_bends,start_time_now,end_time_now,cents,50)
-    patch.build(FILE_NAME_PATH, filenameout)
+    patch.build(file_name_path, filenameout)
     return patch
 
 
 def happy_tensed_sox_init(filenameout, semitones, number_of_bends,
-                          start_time_now, end_time_now, cents, CUTFREQ, gain, QFACTOR):
+                          start_time_now, end_time_now, cents, cutfreq, gain, qfactor):
     patch = Transformer()
     patch.pitch(semitones, False)
     patch.tempo(1.18, 's')
     patch.gain(gain)
     # patch.bend(number_of_bends,start_time_now,end_time_now,cents,50)
-    patch.treble(gain, CUTFREQ, 0.5)
-    patch.equalizer(CUTFREQ, QFACTOR, gain)
-    patch.build(FILE_NAME_PATH, filenameout)
+    patch.treble(gain, cutfreq, 0.5)
+    patch.equalizer(cutfreq, qfactor, gain)
+    patch.build(file_name_path, filenameout)
     return patch
 
 
-def sad_sox_init(semitones, gain, CUTFREQ, filenameout):
-    CUTFREQ = 3500
+def sad_sox_init(semitones, gain, cutfreq, filenameout):
+    cutfreq = 3500
     patch = Transformer()
     patch.pitch(semitones, False)
     patch.tempo(0.95, 's')
-    patch.treble(gain, CUTFREQ, 0.5)
-    patch.build(FILE_NAME_PATH, filenameout)
+    patch.treble(gain, cutfreq, 0.5)
+    patch.build(file_name_path, filenameout)
     return patch
 
 
@@ -237,13 +237,13 @@ def happy_patch(sampleFrequency, utterance_begin):
 
             Return:	   happy_patch
 
-    See: appended_utterance_time_stamps(CONSECUTIVE_BLOCKS,TIME_STAMPS,selected_inflect_block)
+    See: appended_utterance_time_stamps(consecutive_blocks,time_stamps,selected_inflect_block)
     """
 
-    filenameout = CD + '/' + \
-        splitext(basename(FILE_NAME_PATH))[0] + "Happy.wav"
+    filenameout = cd + '/' + \
+        splitext(basename(file_name_path))[0] + "Happy.wav"
     gain = 3.0
-    semitones = 1.5 * PARAMETER_CONTROL
+    semitones = 1.5 * parameter_control
     start_time_now, end_time_now = start_end_times(utterance_begin)
     cents = happy_cents_for_utterance(start_time_now)
     start_time_now, end_time_now = concatenate_list(
@@ -256,9 +256,9 @@ def happy_patch(sampleFrequency, utterance_begin):
         start_time_now,
         end_time_now,
         cents,
-        CUTFREQ,
+        cutfreq,
         gain,
-        QFACTOR)
+        qfactor)
     return happy_patch
 
 
@@ -273,13 +273,13 @@ def happy_tensed_patch(sampleFrequency, utterance_begin):
 
             Return:	   happy_tensed_patch
 
-    See: appended_utterance_time_stamps(CONSECUTIVE_BLOCKS,TIME_STAMPS,selected_inflect_block)
+    See: appended_utterance_time_stamps(consecutive_blocks,time_stamps,selected_inflect_block)
 
     """
-    filenameout = CD + '/' + \
-        splitext(basename(FILE_NAME_PATH))[0] + "Happy_Tensed.wav"
+    filenameout = cd + '/' + \
+        splitext(basename(file_name_path))[0] + "Happy_Tensed.wav"
     gain = 3.0
-    semitones = 2.0 * PARAMETER_CONTROL
+    semitones = 2.0 * parameter_control
     start_time_now, end_time_now = start_end_times(utterance_begin)
     cents = happy_tensed_cents_for_utterance(start_time_now)
     start_time_now, end_time_now = concatenate_list(
@@ -292,9 +292,9 @@ def happy_tensed_patch(sampleFrequency, utterance_begin):
         start_time_now,
         end_time_now,
         cents,
-        CUTFREQ,
+        cutfreq,
         gain,
-        QFACTOR)
+        qfactor)
     return happy_tensed_patch
 
 
@@ -308,10 +308,10 @@ def sad_patch(sampleFrequency):
 
             Return:	   sad_patch
     """
-    filenameout = CD + '/' + splitext(basename(FILE_NAME_PATH))[0] + "Sad.wav"
+    filenameout = cd + '/' + splitext(basename(file_name_path))[0] + "Sad.wav"
     gain = 0.25
-    semitones = -1.5 * PARAMETER_CONTROL
-    sad_patch = sad_sox_init(semitones, gain, CUTFREQ, filenameout)
+    semitones = -1.5 * parameter_control
+    sad_patch = sad_sox_init(semitones, gain, cutfreq, filenameout)
     return sad_patch
 
 
@@ -326,13 +326,13 @@ def afraid_patch(sampleFrequency, utterance_begin):
 
             Return:	   afraid_patch
 
-    See: appended_utterance_time_stamps(CONSECUTIVE_BLOCKS,TIME_STAMPS,selected_inflect_block)
+    See: appended_utterance_time_stamps(consecutive_blocks,time_stamps,selected_inflect_block)
 
     """
-    filenameout = CD + '/' + \
-        splitext(basename(FILE_NAME_PATH))[0] + "Afraid.wav"
+    filenameout = cd + '/' + \
+        splitext(basename(file_name_path))[0] + "Afraid.wav"
     speed = 8.5
-    depth = 1 + (60 * PARAMETER_CONTROL)
+    depth = 1 + (60 * parameter_control)
     start_time_now, end_time_now = start_end_times(utterance_begin)
     cents = afraid_cents_for_utterance(start_time_now)
     start_time_now, end_time_now = concatenate_list(

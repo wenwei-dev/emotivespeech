@@ -6,13 +6,13 @@ warnings.filterwarnings('ignore')
 from scipy.fftpack import rfft, irfft, fftfreq
 
 
-def stft(x, Chunk_Size, overlap=1):
+def stft(x, chunk_size, overlap=1):
     import scipy
-    hop = Chunk_Size / overlap
-    w = scipy.hanning(Chunk_Size + 1)[:-1]
+    hop = chunk_size / overlap
+    w = scipy.hanning(chunk_size + 1)[:-1]
     cnt = 0
-    return np.array([np.fft.rfft(w * x[i:i + Chunk_Size])
-                     for i in range(0, len(x) - Chunk_Size, hop)])
+    return np.array([np.fft.rfft(w * x[i:i + chunk_size])
+                     for i in range(0, len(x) - chunk_size, hop)])
 
 
 def wave_file_read(filename):
@@ -53,7 +53,7 @@ def utterance_chunk(voiced_samples, voice_sample_index):
             Parameters:voiced_samples
                                voice_sample_index
             Returns: voiced_chunk_samples
-    See also: zero_crossing_rate_blocks(wavedata,Chunk_Size,fs)
+    See also: zero_crossing_rate_blocks(wavedata,chunk_size,fs)
     """
     voiced_chunk_samples = []
     for i in range(len(voice_sample_index) - 1):
@@ -84,23 +84,23 @@ def potential_inflection_fundamental_frequency(
     return inflect_frequency
 
 
-def matrix_of_sample_numbers(RMS, inflection_voices_samples):
+def matrix_of_sample_numbers(rms, inflection_voices_samples):
     """
-    matrix_of_sample_numbers(RMS,inflection_voices_samples)
+    matrix_of_sample_numbers(rms,inflection_voices_samples)
                     [inflect_sample] This matrix contains sample numbers for a difference
-                    of voiced samples that are less than the mean of the RMS values.
+                    of voiced samples that are less than the mean of the rms values.
                     According to D.A.V.I.D, this samples are recorded as attack
                     Since we will be applying inflection on new utterance,
                     This will help for classifications amongst voiced samples.
 
-            Parameters:RMS
+            Parameters:rms
                                inflection_voice_samples
 
             Returns: inflect samples
     """
     inflect_sample = []
     for i in range(0, len(inflection_voices_samples) - 1):
-        if (RMS[i] < np.mean(RMS) or (RMS[i] == 0)):
+        if (rms[i] < np.mean(rms) or (rms[i] == 0)):
             inflect_sample.append(inflection_voices_samples[i])
 
     return np.asarray(inflect_sample)
@@ -140,9 +140,9 @@ def reshaped_inflection_blocks(n, selected_inflect_block, Conblocks):
 
 
 def difference_arrays(num_blocks, inflection_block_samples):
-    A = np.array(np.arange(num_blocks))
-    B = np.array(inflection_block_samples.flatten())
-    difference_arrays = np.array(list(set(A) - set(B)))
+    a = np.array(np.arange(num_blocks))
+    b = np.array(inflection_block_samples.flatten())
+    difference_arrays = np.array(list(set(a) - set(b)))
     return difference_arrays
 
 
