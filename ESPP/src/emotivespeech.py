@@ -1,13 +1,12 @@
 import numpy as np
 import preprocess as prep
-import warnings
-warnings.filterwarnings('ignore')
 import batchprocess as bp
 import synthesis as syn
 import os
 import sys
 
-def emotive_speech(file_name_path, chunk_size, typeOfEmotion):
+
+def emotive_speech(fname, chunk_size, typeOfEmotion):
     """
     emotive_speech(x,fs,typeOfEmotion)
     A Caller Module
@@ -16,7 +15,7 @@ def emotive_speech(file_name_path, chunk_size, typeOfEmotion):
                 typeOfEmotion
     Returns: output
     """
-    fs, x = prep.wave_file_read(file_name_path)
+    fs, x = prep.wave_file_read(fname)
     time_stamps = bp.process_variables(x, fs, chunk_size)[0]
     consecutive_blocks = bp.process_variables(x, fs, chunk_size)[1]
     fundamental_frequency_in_blocks = bp.batch_analysis(x, fs, chunk_size)[0]
@@ -30,10 +29,12 @@ def emotive_speech(file_name_path, chunk_size, typeOfEmotion):
         time_stamps,
         selected_inflect_block,
         typeOfEmotion)
+    ofile = '{}/out.wav'.format(os.path.dirname(fname))
+    output.build(fname, ofile)
     return output
 
 if __name__ == '__main__':
-    file_name_path = sys.argv[1]
+    fname = sys.argv[1]
     chunk_size = int(sys.argv[2])
     typeOfEmotion = sys.argv[3]
-    emotive_speech(file_name_path, chunk_size, typeOfEmotion)
+    emotive_speech(fname, chunk_size, typeOfEmotion)

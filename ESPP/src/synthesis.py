@@ -1,15 +1,9 @@
 from scipy.signal import butter
 import numpy as np
 from sox.transform import Transformer
-import os
 from os.path import basename
 from os.path import splitext
-import emotivespeech as es
 
-
-file_name_path = es.file_name_path
-cd = os.path.dirname(file_name_path)
-# cd-Current-Directory
 cutfreq = 4000
 qfactor = 1
 parameter_control = 1
@@ -179,7 +173,7 @@ def concatenate_list(start_time_now, end_time_now):
     return start_time_now, end_time_now
 
 
-def happy_sox_init(filenameout, semitones, number_of_bends,
+def happy_sox_init(semitones, number_of_bends,
                    start_time_now, end_time_now, cents, cutfreq, gain, qfactor):
     patch = Transformer()
     patch.pitch(semitones, False)
@@ -188,22 +182,20 @@ def happy_sox_init(filenameout, semitones, number_of_bends,
     # patch.bend(number_of_bends,start_time_now,end_time_now,cents,50)
     patch.treble(gain, cutfreq, 0.5)
     patch.equalizer(cutfreq, qfactor, gain)
-    patch.build(file_name_path, filenameout)
     return patch
 
 
 def afraid_sox_init(speed, depth, number_of_bends,
-                    start_time_now, end_time_now, cents, filenameout):
+                    start_time_now, end_time_now, cents):
     patch = Transformer()
     patch.tremolo(speed, depth)
     patch.tempo(1.05, 's')
     patch.gain(1.1)
     # patch.bend(number_of_bends,start_time_now,end_time_now,cents,50)
-    patch.build(file_name_path, filenameout)
     return patch
 
 
-def happy_tensed_sox_init(filenameout, semitones, number_of_bends,
+def happy_tensed_sox_init(semitones, number_of_bends,
                           start_time_now, end_time_now, cents, cutfreq, gain, qfactor):
     patch = Transformer()
     patch.pitch(semitones, False)
@@ -212,17 +204,15 @@ def happy_tensed_sox_init(filenameout, semitones, number_of_bends,
     # patch.bend(number_of_bends,start_time_now,end_time_now,cents,50)
     patch.treble(gain, cutfreq, 0.5)
     patch.equalizer(cutfreq, qfactor, gain)
-    patch.build(file_name_path, filenameout)
     return patch
 
 
-def sad_sox_init(semitones, gain, cutfreq, filenameout):
+def sad_sox_init(semitones, gain, cutfreq):
     cutfreq = 3500
     patch = Transformer()
     patch.pitch(semitones, False)
     patch.tempo(0.95, 's')
     patch.treble(gain, cutfreq, 0.5)
-    patch.build(file_name_path, filenameout)
     return patch
 
 
@@ -239,9 +229,6 @@ def happy_patch(sampleFrequency, utterance_begin):
 
     See: appended_utterance_time_stamps(consecutive_blocks,time_stamps,selected_inflect_block)
     """
-
-    filenameout = cd + '/' + \
-        splitext(basename(file_name_path))[0] + "Happy.wav"
     gain = 3.0
     semitones = 1.5 * parameter_control
     start_time_now, end_time_now = start_end_times(utterance_begin)
@@ -250,7 +237,6 @@ def happy_patch(sampleFrequency, utterance_begin):
         start_time_now, end_time_now)
     number_of_bends = len(start_time_now)
     happy_patch = happy_sox_init(
-        filenameout,
         semitones,
         number_of_bends,
         start_time_now,
@@ -276,8 +262,6 @@ def happy_tensed_patch(sampleFrequency, utterance_begin):
     See: appended_utterance_time_stamps(consecutive_blocks,time_stamps,selected_inflect_block)
 
     """
-    filenameout = cd + '/' + \
-        splitext(basename(file_name_path))[0] + "Happy_Tensed.wav"
     gain = 3.0
     semitones = 2.0 * parameter_control
     start_time_now, end_time_now = start_end_times(utterance_begin)
@@ -286,7 +270,6 @@ def happy_tensed_patch(sampleFrequency, utterance_begin):
         start_time_now, end_time_now)
     number_of_bends = len(start_time_now)
     happy_tensed_patch = happy_tensed_sox_init(
-        filenameout,
         semitones,
         number_of_bends,
         start_time_now,
@@ -308,10 +291,9 @@ def sad_patch(sampleFrequency):
 
             Return:	   sad_patch
     """
-    filenameout = cd + '/' + splitext(basename(file_name_path))[0] + "Sad.wav"
     gain = 0.25
     semitones = -1.5 * parameter_control
-    sad_patch = sad_sox_init(semitones, gain, cutfreq, filenameout)
+    sad_patch = sad_sox_init(semitones, gain, cutfreq)
     return sad_patch
 
 
@@ -329,8 +311,6 @@ def afraid_patch(sampleFrequency, utterance_begin):
     See: appended_utterance_time_stamps(consecutive_blocks,time_stamps,selected_inflect_block)
 
     """
-    filenameout = cd + '/' + \
-        splitext(basename(file_name_path))[0] + "Afraid.wav"
     speed = 8.5
     depth = 1 + (60 * parameter_control)
     start_time_now, end_time_now = start_end_times(utterance_begin)
@@ -344,6 +324,5 @@ def afraid_patch(sampleFrequency, utterance_begin):
         number_of_bends,
         start_time_now,
         end_time_now,
-        cents,
-        filenameout)
+        cents)
     return afraid_patch
